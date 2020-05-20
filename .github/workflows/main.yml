@@ -22,16 +22,14 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     #- uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo hello world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: Create ssh enviroment
       run: |
         mkdir -p ~/.ssh
         chmod 700 ~/.ssh
         echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         echo '${{ secrets.ssh_private_key }}' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh magius@88.99.243.98 'whoami'
+    # Runs a set of commands using the runners shell
+    - name: run git pull at target server
+      run: |
+        ssh magius@88.99.243.98 'cd public_html && git pull'
